@@ -21,6 +21,7 @@ COPY --from=manager /usr/lib/jvm/java-17-openjdk/lib/security/java.security /usr
 
 #FROM registry.suse.com/bci/bci-micro:15.6
 FROM neuvector/all_base:latest
+ARG NV_VERSION
 
 COPY --from=builder /chroot /
 COPY supervisord.all.conf /etc/supervisor/conf.d/supervisord.conf
