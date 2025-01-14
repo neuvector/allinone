@@ -68,8 +68,8 @@ test-image:
 build-image: buildx-machine ## build (and load) the container image targeting the current platform.
 	$(IMAGE_BUILDER) build -f package/Dockerfile \
 		--builder $(MACHINE) $(IMAGE_ARGS) \
-		--build-arg VERSION=$(VERSION) -t "$(IMAGE)" $(BUILD_ACTION) .
 		--build-arg NV_VERSION=$(NV_VERSION) --build-arg SRCREPO=$(SRCREPO) \
+		--build-arg VERSION=$(VERSION) -t "$(IMAGE)" $(BUILD_ACTION) . 
 	@echo "Built $(IMAGE)"
 
 
