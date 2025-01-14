@@ -16,8 +16,8 @@ COPY --from=enforcer /etc/sysctl.conf /stage/etc/sysctl.conf
 
 COPY --from=manager /licenses /chroot/licenses/
 COPY --from=manager /usr/local/bin/ /chroot/usr/local/bin/
-COPY --from=manager /usr/lib64/jvm/java-17-openjdk-17/conf/security/java.security.fips /usr/lib64/jvm/java-17-openjdk-17/conf/security/java.security.fips
-COPY --from=manager /entrypoint.sh /entrypoint.sh
+COPY --from=manager /usr/lib64/jvm/java-17-openjdk-17/conf/security/java.security.fips /chroot/usr/lib64/jvm/java-17-openjdk-17/conf/security/java.security.fips
+COPY --from=manager /entrypoint.sh /chroot/entrypoint.sh
 
 #
 # Base image
