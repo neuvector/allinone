@@ -1,5 +1,5 @@
 ARG NV_VERSION=v5.4.2-beta.1
-ARG BCI_VERSION=15.6
+ARG BCI_VERSION=15.7
 ARG SRCREPO=neuvector
 FROM ${SRCREPO}/controller:${NV_VERSION} AS controller
 FROM ${SRCREPO}/enforcer:${NV_VERSION} AS enforcer
@@ -33,17 +33,16 @@ ENV JAVA_VERSION=17.0.12_p8-r0 \
 
 COPY --from=micro / /chroot/
 RUN zypper --installroot /chroot -n --gpg-auto-import-keys in --no-recommends \
-    java-17-openjdk python312 python312-pip \
+    java-17-openjdk python313 python313-pip \
     ca-certificates iproute2 ethtool lsof procps curl jq iptables grep tar awk tcpdump sed kmod wget unzip \
-    libnetfilter_queue-devel liburcu-devel libpcap-devel pcre2-devel libjansson-devel libmnl-devel jemalloc-devel
+    libnetfilter_queue-devel liburcu-devel libpcap-devel pcre-devel pcre2-devel libjansson-devel libmnl-devel jemalloc-devel
 
-RUN zypper addrepo https://download.opensuse.org/repositories/isv:SUSE:neuvector/15.6/isv:SUSE:neuvector.repo && \
+RUN zypper addrepo https://download.opensuse.org/repositories/isv:SUSE:neuvector/15.7/isv:SUSE:neuvector.repo && \
     zypper --installroot /chroot -n --gpg-auto-import-keys refresh && \
     zypper --installroot /chroot install -y yq vectorscan-devel
 
 RUN cp /etc/resolv.conf /chroot/etc/resolv.conf && \
-    chroot /chroot /usr/bin/python3.12 -m pip install --upgrade pip setuptools && \
-    rm /chroot/usr/lib/python3.12/site-packages/distutils-precedence.pth && \
+    chroot /chroot /usr/bin/python3.13 -m pip install --upgrade pip setuptools && \
     zypper --installroot /chroot clean -a && \
     rm -rf /chroot/var/log/
 
@@ -62,8 +61,8 @@ COPY --from=builder /chroot /
 
 COPY supervisord.all.conf /etc/supervisor/conf.d/supervisord.conf
 
-RUN ln -s /usr/bin/python3.12 /usr/bin/python && \
-    ln -s /usr/bin/python3.12 /usr/bin/python3  && \
+RUN ln -s /usr/bin/python3.13 /usr/bin/python && \
+    ln -s /usr/bin/python3.13 /usr/bin/python3  && \
     pip3 install --no-cache-dir "supervisor==4.2.5" && \
     pip3 install --no-cache-dir -r /requirements.txt && \
     ln -s /usr/local/bin/supervisord /usr/bin/supervisord && \
