@@ -42,7 +42,7 @@ RUN zypper addrepo https://download.opensuse.org/repositories/isv:SUSE:neuvector
     zypper --installroot /chroot install -y yq vectorscan-devel
 
 RUN cp /etc/resolv.conf /chroot/etc/resolv.conf && \
-    chroot /chroot /usr/bin/python3.13 -m pip install --upgrade pip setuptools && \
+    chroot /chroot /usr/bin/python3.13 -m pip install --upgrade setuptools && \
     zypper --installroot /chroot clean -a && \
     rm -rf /chroot/var/log/
 
