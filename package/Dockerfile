@@ -37,9 +37,17 @@ RUN zypper --installroot /chroot -n --gpg-auto-import-keys in --no-recommends \
     ca-certificates iproute2 ethtool lsof procps curl jq iptables grep tar awk tcpdump sed kmod wget unzip \
     libnetfilter_queue-devel liburcu-devel libpcap-devel pcre-devel pcre2-devel libjansson-devel libmnl-devel jemalloc-devel
 
-RUN zypper addrepo https://download.opensuse.org/repositories/isv:SUSE:neuvector/15.7/isv:SUSE:neuvector.repo && \
-    zypper --installroot /chroot -n --gpg-auto-import-keys refresh && \
-    zypper --installroot /chroot install -y yq vectorscan-devel
+# Install yq from isv:Rancher:dependencies
+RUN zypper addrepo -n rancher-deps https://download.opensuse.org/repositories/isv:Rancher:dependencies/pkgs/isv:Rancher:dependencies.repo && \
+    rpm --import https://download.opensuse.org/repositories/isv:/Rancher:/dependencies/pkgs/repodata/repomd.xml.key && \
+    zypper -n --gpg-auto-import-keys refresh && \
+    zypper --installroot /chroot install -y --from rancher-deps yq
+
+# Install vectorscan from isv:SUSE:neuvector
+RUN zypper addrepo -n nv-deps https://download.opensuse.org/repositories/isv:SUSE:neuvector/15.7/isv:SUSE:neuvector.repo && \
+    rpm --import https://download.opensuse.org/repositories/isv:SUSE:neuvector/15.7/repodata/repomd.xml.key && \
+    zypper -n refresh && \
+    zypper --installroot /chroot install -y --from nv-deps libhs5-vectorscan5 vectorscan-devel
 
 RUN cp /etc/resolv.conf /chroot/etc/resolv.conf && \
     chroot /chroot /usr/bin/python3.13 -m pip install --upgrade setuptools && \
