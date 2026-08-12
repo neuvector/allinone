@@ -63,7 +63,7 @@ COPY supervisord.all.conf /etc/supervisor/conf.d/supervisord.conf
 
 RUN ln -s /usr/bin/python3.13 /usr/bin/python && \
     ln -s /usr/bin/python3.13 /usr/bin/python3  && \
-    pip3 install --no-cache-dir "supervisor==4.2.5" && \
+    pip3 install --no-cache-dir "supervisor==4.3.0" && \
     pip3 install --no-cache-dir -r /requirements.txt && \
     ln -s /usr/local/bin/supervisord /usr/bin/supervisord && \
     rm -r /root/.cache /requirements.txt
