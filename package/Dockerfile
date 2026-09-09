@@ -37,9 +37,15 @@ RUN zypper --installroot /chroot -n --gpg-auto-import-keys in --no-recommends \
     ca-certificates iproute2 ethtool lsof procps curl jq iptables grep tar awk tcpdump sed kmod wget unzip \
     libnetfilter_queue-devel liburcu-devel libpcap-devel pcre-devel pcre2-devel libjansson-devel libmnl-devel jemalloc-devel
 
+# Install yq from https://rpm.rancher.io/pkgs/community
+RUN zypper refresh && zypper ar -f https://rpm.rancher.io/pkgs/community community-pkgs && \
+    rpm --import https://rpm.rancher.io/pkgs/community/repodata/repomd.xml.key && \
+    zypper -n --gpg-auto-import-keys refresh && \
+    zypper --non-interactive --installroot /chroot in --no-recommends -r community-pkgs yq
+
 RUN zypper addrepo https://download.opensuse.org/repositories/isv:SUSE:neuvector/15.7/isv:SUSE:neuvector.repo && \
     zypper --installroot /chroot -n --gpg-auto-import-keys refresh && \
-    zypper --installroot /chroot install -y yq vectorscan-devel
+    zypper --installroot /chroot install -y vectorscan-devel
 
 RUN cp /etc/resolv.conf /chroot/etc/resolv.conf && \
     chroot /chroot /usr/bin/python3.13 -m pip install --upgrade setuptools && \
