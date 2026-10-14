@@ -37,11 +37,10 @@ RUN zypper --installroot /chroot -n --gpg-auto-import-keys in --no-recommends \
     ca-certificates iproute2 ethtool lsof procps curl jq iptables grep tar awk tcpdump sed kmod wget unzip \
     libnetfilter_queue-devel liburcu-devel libpcap-devel pcre-devel pcre2-devel libjansson-devel libmnl-devel jemalloc-devel
 
-# Install yq from https://rpm.rancher.io/pkgs/community
-RUN zypper refresh && zypper ar -f https://rpm.rancher.io/pkgs/community community-pkgs && \
-    rpm --import https://rpm.rancher.io/pkgs/community/repodata/repomd.xml.key && \
-    zypper -n --gpg-auto-import-keys refresh && \
-    zypper --non-interactive --installroot /chroot in --no-recommends -r community-pkgs yq
+# Instal yq from prime version because community version doesn't automatically rebuild when golang version upgrades
+RUN zypper refresh && zypper ar -f https://rpm.rancher.io/pkgs/prime pkgs && \
+    rpm --root /chroot --import https://raw.githubusercontent.com/rancher/rancher/refs/heads/main/rancher-rpm-pkgs.key && \
+    zypper --non-interactive --installroot /chroot in --no-recommends -r pkgs yq
 
 RUN zypper addrepo https://download.opensuse.org/repositories/isv:SUSE:neuvector/15.7/isv:SUSE:neuvector.repo && \
     zypper --installroot /chroot -n --gpg-auto-import-keys refresh && \
